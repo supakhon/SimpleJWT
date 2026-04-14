@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
+from flask_cors import CORS
 import jwt
 import datetime
 import os
@@ -9,6 +10,8 @@ import uuid
 app = Flask(__name__, static_folder='public')
 bcrypt = Bcrypt(app)
 
+CORS(app)
+
 # ----- Database ----- #
 db_url = os.environ.get('DATABASE_URL', 'postgresql://user:password@localhost/dbname')
 # db_url = 'sqlite:///test.db'
@@ -16,7 +19,7 @@ db_url = os.environ.get('DATABASE_URL', 'postgresql://user:password@localhost/db
 if db_url.startswith("postgres://"):
     db_url = db_url.replace("postgres://", "postgresql://", 1)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = db_url
+app.config['SQLALCHEMY_DATABASE_URI'] = db_url + "?sslmode=require"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -55,7 +58,7 @@ def register():
 # Login
 @app.post('/login')
 def login():
-    data = request.json
+    data = request.json or {}
     user = User.query.filter_by(name=data.get('name')).first()
 
     if user and bcrypt.check_password_hash(user.password, data.get('password')):
@@ -93,4 +96,4 @@ def profile():
         return jsonify({ "error": "Invalid token" }), 403
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 3000)), debug = True)
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 3000)), debug = os.environ.get("ENV") != "production")
