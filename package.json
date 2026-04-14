@@ -5,5 +5,9 @@
     "jsonwebtoken": "^9.0.3",
     "sqlite": "^5.1.1",
     "sqlite3": "^6.0.1"
+  },
+  "scripts": {
+    "start": "node app.js",
+    "install": "npm install"
   }
 }
