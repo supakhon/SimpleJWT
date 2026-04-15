@@ -68,3 +68,15 @@ def authenticate_user(username, password):
 
     return user, None
 
+
+# ===== User Section ===== #
+def get_user_by_name(username):
+    """
+    Fetch user information by Username
+    """
+    user = User.query.filter_by(username=username).first()
+
+    if not user: return None
+
+    return user
+

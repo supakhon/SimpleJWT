@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from services.auth_service import login, signup
+from services.token_service import decode_token
 
 auth_router = Blueprint("auth", __name__)
 
@@ -40,8 +41,31 @@ def login_handler():
 
     if token:
         return jsonify({
-            "token": token,
             "message": "Login Success",
+            "token": token,
+            "username": username,
         })
     else:
         return jsonify({ "error": "Invalid Username or Password" }), 401
+    
+
+# ==== User from Token ==== #
+@auth_router.route("/profile", methods=["GET"])
+def profile_handler():
+    """
+    Handle user login via JSON body.
+    Returns a session token on success.
+    """
+    auth_header = request.headers.get("Authorization")
+    if not auth_header:
+        return jsonify({ "error": "No token" }), 401
+    
+    token = auth_header.split(" ")[1]
+    try:
+        decoded = decode_token(token)
+        return jsonify({
+            "message": "This is protected data for: ",
+            "username": decoded.username
+        })
+    except:
+        return jsonify({ "error": "Invaild token" }), 403

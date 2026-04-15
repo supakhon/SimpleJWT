@@ -13,5 +13,8 @@ def create_token(user):
 
     if isinstance(token, bytes):
         token = token.decode("utf-8")
-
     return token
+
+def decode_token(token):
+    decoded = jwt.decode(token, SECRET, algorithms=["HS256"])
+    return decoded
