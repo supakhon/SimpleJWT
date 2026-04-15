@@ -18,7 +18,10 @@ def signup_handler():
     
     try:
         signup(username, password)
-        return jsonify({ "message": "Signup Success" })
+        return jsonify({ 
+            "message": "Signup Success", 
+            "username": username, 
+        })
     except Exception as e:
         return jsonify({ "error": str(e) }), 500
 

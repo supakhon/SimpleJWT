@@ -9,6 +9,7 @@ class User(db.Model):
                    primary_key=True,
                    default=lambda: str(uuid.uuid4()))
     
-    username = db.Column(db.String(80))
+    username = db.Column(db.String(80),
+                         unique=True)
     
     password = db.Column(db.String(200))

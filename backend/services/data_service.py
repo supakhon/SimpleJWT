@@ -1,8 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
-# import backend.models
-from backend.models.user_model import User
 
+from backend.models.user_model import User
 
 
 # ===== Database Section ===== #
@@ -52,6 +51,7 @@ def create_user(username, password):
     db.session.commit()
 
     print(f'User {new_user.username} has been created.')
+    return new_user, None
 
 
 # ===== Login Section ===== #
@@ -66,4 +66,5 @@ def authenticate_user(username, password):
     if not user: return None, "User not found"
     if not bcrypt.check_password_hash(user.password, password): return None, "Invalid password"
 
-    return user
+    return user, None
+

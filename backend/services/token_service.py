@@ -7,7 +7,7 @@ SECRET = os.environ.get("SECRET")
 def create_token(user):
     token = jwt.encode({
         "id": user.id,
-        "name": user.name,
+        "username": user.username,
         "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=1)
     }, SECRET, algorithm="HS256")
 

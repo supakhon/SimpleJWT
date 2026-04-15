@@ -4,8 +4,12 @@ def login(username, password):
     """
     Authenticate user and return checked user
     """
-    user = data_service.authenticate_user(username, password) 
-    return token_service.create_token(user)
+    user, error = data_service.authenticate_user(username, password)
+
+    if error: return None
+
+    token = token_service.create_token(user)
+    return token
 
 def signup(username, password):
     """
